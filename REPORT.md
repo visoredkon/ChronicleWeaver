@@ -196,5 +196,10 @@ Untuk memitigasi *failure models* tersebut, beberapa strategi dapat diterapkan:
 
 *Duplicate rate* mengukur *duplicate events* yang berhasil dideteksi dan di-*drop* oleh sistem, dan merupakan indikator efektivitas mekanisme *deduplication*. Dalam sistem yang mengimplementasikan *at-least-once semantics*, *duplicate events* tidak dapat dihindari akibat *retries* dari *publishers* terjadi *network failures*. Keputusan desain untuk mengimplementasikan *idempotent consumer* dengan *persistent deduplication store* bertujuan untuk mencapai *duplicate rate* yang rendah atau *ideally zero*, sehingga menjaga *data integrity* dan mencegah *inconsistent state*. Penggunaan *composite key* `(event_id, topic)` sebagai *unique identifier* bertujuan agar *aggregator* dapat mendeteksi duplikasi dengan akurat, dan *deduplication persistence store* dengan `SQLite` dapat mempertahankan state meskipun terjadi *crash failures*.
 
+# Video Demo
+[Link](https://www.youtube.com/watch?v=Z1eU1rAKpQc)
+
+[![Demo Video](https://i.ytimg.com/vi/Z1eU1rAKpQc/maxresdefault.jpg)](https://www.youtube.com/watch?v=Z1eU1rAKpQc)
+
 # Bibliography
 Steen, M. van, & Tanenbaum, A. S. (2023). Distributed Systems (4th ed.). Maarten van Steen. https:// www.distributed-systems.net/index.php/books/ds4/
