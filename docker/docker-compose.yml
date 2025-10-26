@@ -1,0 +1,48 @@
+services:
+  aggregator:
+    build:
+      context: ..
+      dockerfile: docker/aggregator.Dockerfile
+    container_name: chronicleweaver-aggregator
+    ports:
+      - "8000:8000"
+    volumes:
+      - aggregator-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/').read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - chronicleweaver-network
+
+  publisher:
+    build:
+      context: ..
+      dockerfile: docker/publisher.Dockerfile
+    container_name: chronicleweaver-publisher
+    environment:
+      AGGREGATOR_HOST: chronicleweaver-aggregator
+      AGGREGATOR_PORT: 8000
+    depends_on:
+      aggregator:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - chronicleweaver-network
+
+networks:
+  chronicleweaver-network:
+    driver: bridge
+
+volumes:
+  aggregator-data:
+    driver: local
