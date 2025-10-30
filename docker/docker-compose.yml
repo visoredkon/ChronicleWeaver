@@ -4,6 +4,8 @@ services:
       context: ..
       dockerfile: docker/aggregator.Dockerfile
     container_name: chronicleweaver-aggregator
+    environment:
+      DEDUPLICATION_DB_PATH: /app/data/chronicle.db
     ports:
       - "8000:8000"
     volumes:
@@ -15,7 +17,7 @@ services:
           "CMD",
           "python",
           "-c",
-          "import urllib.request; urllib.request.urlopen('http://localhost:8000/').read()",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()",
         ]
       interval: 10s
       timeout: 5s

@@ -37,51 +37,51 @@ Sistem ChronicleWeaver terdiri dari dua *main services*:
 #### 1. Build Images
 Dari *root directory project*:
 ```fish
-docker compose build
+docker compose -f docker/docker-compose.yml build
 ```
 
 Atau *build* dengan *cache bypass*:
 ```fish
-docker compose build --no-cache
+docker compose -f docker/docker-compose.yml build --no-cache
 ```
 
 #### 2. Run Services
 *Start* semua *services* (*aggregator* + *publisher*):
 ```fish
-docker compose up
+docker compose -f docker/docker-compose.yml up
 ```
 
 *Run* in *background* (*detached mode*):
 ```fish
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 ```
 
 #### 3. View Logs
 Lihat *logs* semua *services*:
 ```fish
-docker compose logs -f
+docker compose -f docker/docker-compose.yml logs -f
 ```
 
 Lihat *logs service* spesifik:
 ```fish
-docker compose logs -f aggregator
-docker compose logs -f publisher
+docker compose -f docker/docker-compose.yml logs -f aggregator
+docker compose -f docker/docker-compose.yml logs -f publisher
 ```
 
 #### 4. Stop Services
 *Stop* tanpa *remove containers*:
 ```fish
-docker compose stop
+docker compose -f docker/docker-compose.yml stop
 ```
 
 *Stop* dan *remove containers*:
 ```fish
-docker compose down
+docker compose -f docker/docker-compose.yml down
 ```
 
 *Stop* dan *remove containers* + *volumes* (hapus data):
 ```fish
-docker compose down -v
+docker compose -f docker/docker-compose.yml down -v
 ```
 
 ### Menggunakan Docker Manual
@@ -257,14 +257,14 @@ AGGREGATOR_HOST=localhost AGGREGATOR_PORT=8000 python -m src.publisher.app.main
 ## Environment Variables
 ### Aggregator Service
 - `APP_PORT`: Port untuk *aggregator service* (*default*: `8000`)
-- `DEDUPLICATION_DB_PATH`: *Path* untuk SQLite *database* (*default*: `.chronicle.db`)
+- `DEDUPLICATION_DB_PATH`: *Path* untuk SQLite *database* (*default*: `/app/data/chronicle.db`)
 
 ### Publisher Service
 - `AGGREGATOR_HOST`: *Hostname aggregator service* (*default*: `localhost`)
 - `AGGREGATOR_PORT`: Port *aggregator service* (*default*: `8000`)
 
 ### Contoh Kustomisasi
-Buat file `.env`:
+Buat file `.env` di folder `docker/`:
 
 ```env
 APP_PORT=8080
@@ -274,7 +274,13 @@ AGGREGATOR_HOST=aggregator
 AGGREGATOR_PORT=8080
 ```
 
-Kemudian update `docker-compose.yml` untuk load `.env` file.
+Kemudian update `docker/docker-compose.yml` untuk load `.env` file dengan menambahkan:
+```yaml
+services:
+  aggregator:
+    env_file:
+      - .env
+```
 
 ## Testing
 ### Run All Tests
